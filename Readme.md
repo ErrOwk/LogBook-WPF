@@ -19,12 +19,17 @@
 
 ### 贡献
 由于只是一个很小的项目,且本身我自己写的也不好,所以贡献也没有什么很高要求
+
 但是不要直接合并到main里面谢谢(
 
 ### 关于项目
-只是我在学习C#过程中的一个小练手项目而已,项目仍然有许多不足
+只是我在初学C#过程中的一个小练手项目而已,项目仍然有许多不足
+
 (可以说就是屎山)
+
 项目使用了[FluentWPF](https://github.com/sourcechord/FluentWPF)作为外观框架
+
 同时,对于同步LoTW和QRZ.com的代码,则参考了[Gitee:X-QSL](https://gitee.com/yuzhenwu/x-qsl-amateur-radio-adif-tool)一位国人写的小工具
+
 十分感谢并送上诚挚的73!
 
