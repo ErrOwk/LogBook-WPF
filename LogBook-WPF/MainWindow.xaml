@@ -1,0 +1,226 @@
+﻿<Window
+    x:Class="LogBook_WPF.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Specialized="clr-namespace:System.Collections.Specialized;assembly=System.Collections.Specialized"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:LogBook_WPF"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    Title="通联日志"
+    Width="900"
+    Height="600"
+    ui:WindowHelper.SystemBackdropType="Mica"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    mc:Ignorable="d">
+    <Grid>
+        <DockPanel>
+            <Menu Background="#33000000" DockPanel.Dock="Top">
+                <MenuItem
+                    x:Name="newQSO"
+                    Click="newQSO_Click"
+                    Header="新建QSO" />
+                <MenuItem
+                    x:Name="exportQSO"
+                    Click="exportQSO_Click"
+                    Header="导出QSO(.adi)" />
+                <MenuItem x:Name="exportToLoTW" Header="导出到LoTW" Click="exportToLoTW_Click" />
+                <MenuItem
+                    x:Name="exportToQRZ"
+                    Click="exportToQRZ_Click"
+                    Header="导出到QRZ.com" />
+                <MenuItem x:Name="settings" Header="设置" Click="settings_Click" />
+            </Menu>
+            <StatusBar
+                Height="45"
+                Background="#33000000"
+                DockPanel.Dock="Bottom">
+                <TextBlock x:Name="todayQSOCount" Text="  QSO Count: " />
+            </StatusBar>
+            <DataGrid
+                x:Name="dgvQSOs"
+                AutoGenerateColumns="False"
+                CanUserResizeRows="False"
+                DockPanel.Dock="Top"
+                HeadersVisibility="Column"
+                HorizontalScrollBarVisibility="Visible"
+                IsReadOnly="True"
+                IsSynchronizedWithCurrentItem="False"
+                MouseLeftButtonUp="dgvQSOs_MouseLeftButtonUp"
+                ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Binding="{Binding Id}"
+                        CanUserReorder="False"
+                        CanUserResize="False"
+                        CanUserSort="True"
+                        Header="Id"
+                        IsReadOnly="True"
+                        SortDirection="Ascending" />
+                    <DataGridCheckBoxColumn
+                        Binding="{Binding isRcvdQSL}"
+                        CanUserReorder="True"
+                        CanUserResize="False"
+                        CanUserSort="False"
+                        Header="收到QSL"
+                        IsReadOnly="True" />
+                    <DataGridCheckBoxColumn
+                        Binding="{Binding isSentQSL}"
+                        CanUserResize="False"
+                        CanUserSort="False"
+                        Header="发送QSL"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Width="Auto"
+                        Binding="{Binding UTCTime}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="UTC时间"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding selfCallsign}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="我方呼号"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding toCallsign}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="对方呼号"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding selfRST}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="我方RST"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding toRST}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="对方RST"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding mode}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="通信模式"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding prop_mode}"
+                        CanUserSort="False"
+                        Header="传播模式"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding satName}"
+                        CanUserSort="False"
+                        Header="卫星名称"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding freq}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="发射频率"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding band}"
+                        CanUserSort="False"
+                        Header="发射波段" />
+                    <DataGridTextColumn
+                        Binding="{Binding freq_rx}"
+                        CanUserSort="False"
+                        Header="接收频率"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding band_rx}"
+                        CanUserSort="False"
+                        Header="接收波段"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding selfWatt}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="我方功率"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding toWatt}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="对方功率"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding selfRIG}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="我方设备"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding selfANT}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="我方天线"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding toRIG}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="对方设备"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding toANT}"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="对方天线"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding selfWX}"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="我方天气"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding toWX}"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="对方天气"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding selfQTH}"
+                        CanUserSort="False"
+                        Header="我方QTH"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding toQTH}"
+                        CanUserSort="False"
+                        Header="对方QTH"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        MinWidth="100"
+                        Binding="{Binding RMKS}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="False"
+                        Header="备注"
+                        IsReadOnly="True" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+
+
+
+    </Grid>
+</Window>
