@@ -19,8 +19,7 @@
 
 ### 贡献
 由于只是一个很小的项目,且本身我自己写的也不好,所以贡献也没有什么很高要求
-
-但是不要直接合并到main里面谢谢(
+欢迎fork dev分支并进行任何你觉得有用的修改!
 
 ### 关于项目
 只是我在初学C#过程中的一个小练手项目而已,项目仍然有许多不足
@@ -29,7 +28,9 @@
 
 项目使用了[FluentWPF](https://github.com/sourcechord/FluentWPF)作为外观框架
 
-同时,对于同步LoTW和QRZ.com的代码,则参考了[Gitee:X-QSL](https://gitee.com/yuzhenwu/x-qsl-amateur-radio-adif-tool)一位国人写的小工具
+INI文件读写使用了[Stackoverflow](https://stackoverflow.com/questions/217902/reading-writing-an-ini-file)中的一个帖子中使用的类
 
-十分感谢并送上诚挚的73!
+同时,对于同步LoTW和QRZ.com的代码,则参考了[X-QSL](https://gitee.com/yuzhenwu/x-qsl-amateur-radio-adif-tool)一位国人写的小工具
+
+**在此表示衷心感谢并送上诚挚的73!**
 
