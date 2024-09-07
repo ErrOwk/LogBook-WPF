@@ -146,7 +146,7 @@ namespace LogBook_WPF
 
                 Process.Start(startInfo);
 
-                MessageBox.Show("导出成功");
+                MessageBox.Show("导出任务执行完成,请打开QRZ.com网页核对是否正确导出");
             }
             catch (Exception ex)
             {
@@ -254,7 +254,7 @@ namespace LogBook_WPF
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.FileName = "cmd.exe";
             startInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(configFile.Read("tqslAddr", "Upload"));
-            startInfo.Arguments = "/C \"tqsl -q -l \"" + configFile.Read("tqslStationName", "Upload") + "\" -p \"Insecure\" -a all -u -d \"exportlotw.adi\"  2>temp.txt  ";
+            startInfo.Arguments = "/C \"tqsl -q -l \"" + configFile.Read("tqslStationName", "Upload") + "\" -p \"Insecure\" -a all -u -d \""+ System.Environment.CurrentDirectory +"\\exportlotw.adi\"  2>temp.txt  ";
             startInfo.RedirectStandardOutput = true;
             startInfo.UseShellExecute = false;
             startInfo.StandardOutputEncoding = Encoding.Default;
@@ -265,7 +265,7 @@ namespace LogBook_WPF
 
             process.WaitForExit();
 
-            MessageBox.Show("导出任务执行完成");
+            MessageBox.Show("导出任务执行完成,请打开LoTW网页核对是否正确导出");
 
 
         }
