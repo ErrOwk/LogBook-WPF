@@ -14,9 +14,9 @@ namespace LogBook_WPF.Models
         public int Id { get; set; }
 
         public DateTime UTCTime { get; set; }
-        public string selfCallsign { get; set; }
-        public string toCallsign { get; set; }
-        public string mode {  get; set; }
+        public string selfCallsign { get; set; } = string.Empty;
+        public string toCallsign { get; set; } = string.Empty;
+        public string mode {  get; set; } = string.Empty;
         public double freq { get; set; }
         public double? freq_rx { get; set; }
         public string? band { get; set; }
