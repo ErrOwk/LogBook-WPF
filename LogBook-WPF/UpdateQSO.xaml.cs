@@ -1,6 +1,4 @@
-﻿using LogBook_WPF.Models;
-using SQLite;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using LogBook_WPF.Models;
+using SQLite;
 
 namespace LogBook_WPF
 {
@@ -21,7 +21,6 @@ namespace LogBook_WPF
     /// </summary>
     public partial class UpdateQSO : Window
     {
-
         public SQLiteConnection conn;
 
         public int Id;
@@ -106,60 +105,113 @@ namespace LogBook_WPF
 
         private void qsoSave_Click(object sender, RoutedEventArgs e)
         {
-            DateTime UTCTime = Convert.ToDateTime(DateBox.Text + " " + hourBox.Text + ":" + minuteBox.Text + ":" + secondBox.Text);
-            if (selfCallsign.Text == "") { MessageBox.Show("请输入呼号"); return; }
-            else if (toCallsign.Text == "") { MessageBox.Show("请输入呼号"); return; }
-            else if (selfRST.Text == "") { MessageBox.Show("请输入信号报告"); return; }
-            else if (toRST.Text == "") { MessageBox.Show("请输入信号报告"); return; }
-            else if (modeBox.Text == "") { MessageBox.Show("请输入通信模式"); return; }
-            else if (freq.Text == "") { MessageBox.Show("请输入发射频率"); return; }
-            else if (bandBox.Text == "") { MessageBox.Show("请输入发射波段"); return; }
-            else if (string.IsNullOrEmpty(freq_rx.Text) && string.IsNullOrEmpty(bandRxBox.Text)) { MessageBox.Show("请输入接收波段"); return; }
+            DateTime UTCTime = Convert.ToDateTime(
+                DateBox.Text + " " + hourBox.Text + ":" + minuteBox.Text + ":" + secondBox.Text
+            );
+            if (selfCallsign.Text == "")
+            {
+                MessageBox.Show("请输入呼号");
+                return;
+            }
+            else if (toCallsign.Text == "")
+            {
+                MessageBox.Show("请输入呼号");
+                return;
+            }
+            else if (selfRST.Text == "")
+            {
+                MessageBox.Show("请输入信号报告");
+                return;
+            }
+            else if (toRST.Text == "")
+            {
+                MessageBox.Show("请输入信号报告");
+                return;
+            }
+            else if (modeBox.Text == "")
+            {
+                MessageBox.Show("请输入通信模式");
+                return;
+            }
+            else if (freq.Text == "")
+            {
+                MessageBox.Show("请输入发射频率");
+                return;
+            }
+            else if (bandBox.Text == "")
+            {
+                MessageBox.Show("请输入发射波段");
+                return;
+            }
+            else if (string.IsNullOrEmpty(freq_rx.Text) && string.IsNullOrEmpty(bandRxBox.Text))
+            {
+                MessageBox.Show("请输入接收波段");
+                return;
+            }
 
-
-            try { if (freq.Text != "") Convert.ToDouble(freq.Text); }
+            try
+            {
+                if (freq.Text != "")
+                    Convert.ToDouble(freq.Text);
+            }
             catch
             {
                 MessageBox.Show("请正确输入频率");
                 return;
             }
 
-            try { if (freq_rx.Text != "") Convert.ToDouble(freq_rx.Text); }
+            try
+            {
+                if (freq_rx.Text != "")
+                    Convert.ToDouble(freq_rx.Text);
+            }
             catch
             {
                 MessageBox.Show("请正确输入频率");
                 return;
             }
 
-            try { Convert.ToInt32(selfRST.Text); }
+            try
+            {
+                Convert.ToInt32(selfRST.Text);
+            }
             catch
             {
                 MessageBox.Show("请正确输入RST");
                 return;
             }
 
-            try { Convert.ToInt32(toRST.Text); }
+            try
+            {
+                Convert.ToInt32(toRST.Text);
+            }
             catch
             {
                 MessageBox.Show("请正确输入RST");
                 return;
             }
 
-            try { if (selfWatt.Text != "") Convert.ToDouble(selfWatt.Text); }
+            try
+            {
+                if (selfWatt.Text != "")
+                    Convert.ToDouble(selfWatt.Text);
+            }
             catch
             {
                 MessageBox.Show("请正确输入功率");
                 return;
             }
 
-            try { if (toWatt.Text != "") Convert.ToDouble(toWatt.Text); }
+            try
+            {
+                if (toWatt.Text != "")
+                    Convert.ToDouble(toWatt.Text);
+            }
             catch
             {
                 MessageBox.Show("请正确输入功率");
                 return;
             }
-
-
 
             QSO newQSO = new QSO()
             {
@@ -188,8 +240,10 @@ namespace LogBook_WPF
                 prop_mode = propModeBox.Text,
                 satName = satNameBox.Text,
             };
-            if (selfWatt.Text != "") newQSO.selfWatt = Convert.ToDouble(selfWatt.Text);
-            if (toWatt.Text != "") newQSO.toWatt = Convert.ToDouble(toWatt.Text);
+            if (selfWatt.Text != "")
+                newQSO.selfWatt = Convert.ToDouble(selfWatt.Text);
+            if (toWatt.Text != "")
+                newQSO.toWatt = Convert.ToDouble(toWatt.Text);
             if (freq_rx.Text != "")
             {
                 newQSO.freq_rx = Convert.ToDouble(freq_rx.Text);
@@ -291,34 +345,35 @@ namespace LogBook_WPF
         {
             Dictionary<string, string> SatelliteFrequencies = new Dictionary<string, string>
             {
-                {"SO-50", "145.85"},
-                {"SO-121", "145.875"},
-                {"AO-27", "145.8"},
-                {"AO-91", "435.25"},
-                {"UVSQ", "145.905"},
-                {"PO-101", "437.5"},
-                {"CAS-3H", "144.35"},
-                {"ARISS", "145.99"},
-                {"INSPR7", "145.97"},
-                {"AO-92", "435.35"},
-                {"TEVEL1", "145.97"},
-                {"TEVEL2", "145.97"},
-                {"TEVEL3", "145.97"},
-                {"TEVEL4", "145.97"},
-                {"TEVEL5", "145.97"},
-                {"TEVEL6", "145.97"},
-                {"TEVEL7", "145.97"},
-                {"TEVEL8", "145.97"},
-                {"IO-117", "435.307"},
-                {"RS-44", "145.965"},
+                { "SO-50", "145.85" },
+                { "SO-121", "145.875" },
+                { "AO-27", "145.8" },
+                { "AO-91", "435.25" },
+                { "UVSQ", "145.905" },
+                { "PO-101", "437.5" },
+                { "CAS-3H", "144.35" },
+                { "ARISS", "145.99" },
+                { "INSPR7", "145.97" },
+                { "AO-92", "435.35" },
+                { "TEVEL1", "145.97" },
+                { "TEVEL2", "145.97" },
+                { "TEVEL3", "145.97" },
+                { "TEVEL4", "145.97" },
+                { "TEVEL5", "145.97" },
+                { "TEVEL6", "145.97" },
+                { "TEVEL7", "145.97" },
+                { "TEVEL8", "145.97" },
+                { "IO-117", "435.307" },
+                { "RS-44", "145.965" },
             };
 
             string txFreq;
-            if (SatelliteFrequencies.TryGetValue(sat, out txFreq))
+            if (SatelliteFrequencies.TryGetValue(sat, out txFreq!))
             {
                 return txFreq;
             }
-            else return "";
+            else
+                return "";
         }
 
         /// <summary>
@@ -330,34 +385,35 @@ namespace LogBook_WPF
         {
             Dictionary<string, string> SatelliteFrequencies = new Dictionary<string, string>
             {
-                {"SO-50", "36.795"},
-                {"SO-121", "436.666"},
-                {"AO-27", "436.795"},
-                {"AO-91", "145.96"},
-                {"UVSQ", "437.02"},
-                {"PO-101", "145.9"},
-                {"CAS-3H", "437.2"},
-                {"ARISS", "437.8"},
-                {"INSPR7", "437.41"},
-                {"AO-92", "145.88"},
-                {"TEVEL1", "436.4"},
-                {"TEVEL2", "436.4"},
-                {"TEVEL3", "436.4"},
-                {"TEVEL4", "436.4"},
-                {"TEVEL5", "436.4"},
-                {"TEVEL6", "436.4"},
-                {"TEVEL7", "436.4"},
-                {"TEVEL8", "436.4"},
-                {"IO-117", "435.31"},
-                {"RS-44", "435.6"},
+                { "SO-50", "36.795" },
+                { "SO-121", "436.666" },
+                { "AO-27", "436.795" },
+                { "AO-91", "145.96" },
+                { "UVSQ", "437.02" },
+                { "PO-101", "145.9" },
+                { "CAS-3H", "437.2" },
+                { "ARISS", "437.8" },
+                { "INSPR7", "437.41" },
+                { "AO-92", "145.88" },
+                { "TEVEL1", "436.4" },
+                { "TEVEL2", "436.4" },
+                { "TEVEL3", "436.4" },
+                { "TEVEL4", "436.4" },
+                { "TEVEL5", "436.4" },
+                { "TEVEL6", "436.4" },
+                { "TEVEL7", "436.4" },
+                { "TEVEL8", "436.4" },
+                { "IO-117", "435.31" },
+                { "RS-44", "435.6" },
             };
 
             string rxFreq;
-            if (SatelliteFrequencies.TryGetValue(sat, out rxFreq))
+            if (SatelliteFrequencies.TryGetValue(sat, out rxFreq!))
             {
                 return rxFreq;
             }
-            else return "";
+            else
+                return "";
         }
 
         /// <summary>
@@ -397,7 +453,6 @@ namespace LogBook_WPF
                 {
                     return;
                 }
-
             }
         }
 

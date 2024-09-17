@@ -1,8 +1,4 @@
-﻿using iNKORE.UI.WPF.Helpers;
-using LogBook_WPF.Models;
-using Microsoft.Win32;
-using SQLite;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -19,11 +15,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using ErrOwk.IniParser;
+using iNKORE.UI.WPF.Helpers;
+using LogBook_WPF.Models;
+using Microsoft.Win32;
+using SQLite;
 using Windows.System;
 
 namespace LogBook_WPF
 {
-
     /// <summary>
     /// 主页面
     /// </summary>
@@ -31,13 +31,13 @@ namespace LogBook_WPF
     {
         internal SQLiteConnection conn;
 
-        public IniFile configFile;
+        public IniParser iniFile;
 
         public MainWindow()
         {
             Directory.CreateDirectory("Data");
             InitializeComponent();
-            configFile = new IniFile("Data\\config.ini");
+            iniFile = new IniParser("Data\\config.ini");
             conn = new SQLiteConnection("Data\\QSO.db3");
             conn.CreateTable<QSO>();
             UpdateDgv();
@@ -66,10 +66,7 @@ namespace LogBook_WPF
             qsoList.Reverse();
             dgvQSOs.ItemsSource = qsoList;
             //更新列表
-
         }
-
-        
 
         private void dgvQSOs_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -79,7 +76,9 @@ namespace LogBook_WPF
                 qsoList = conn.Table<QSO>().ToList<QSO>();
                 //获取QSO列表
 
-                Window updateQSO = new UpdateQSO(qsoList[qsoList.Count - dgvQSOs.SelectedIndex - 1]);
+                Window updateQSO = new UpdateQSO(
+                    qsoList[qsoList.Count - dgvQSOs.SelectedIndex - 1]
+                );
                 updateQSO.ShowDialog();
                 //修改选中项
 
@@ -89,7 +88,6 @@ namespace LogBook_WPF
 
         private void exportQSO_Click(object sender, RoutedEventArgs e)
         {
-
             SaveFileDialog dlg = new SaveFileDialog();
             dlg.Title = "保存.ADI文件";
             dlg.FileName = "exportQSO.adi";
@@ -110,13 +108,15 @@ namespace LogBook_WPF
         private void exportToQRZ_Click(object sender, RoutedEventArgs e)
         {
             string originPwd = "";
-            
+
             try
             {
                 //解密密码
                 StreamReader sr = new StreamReader("Data\\qrzPwd");
                 Byte[] protectedPwd = Convert.FromBase64String(sr.ReadToEnd());
-                originPwd = Encoding.UTF8.GetString(ProtectedData.Unprotect(protectedPwd, null, DataProtectionScope.CurrentUser));
+                originPwd = Encoding.UTF8.GetString(
+                    ProtectedData.Unprotect(protectedPwd, null, DataProtectionScope.CurrentUser)
+                );
             }
             catch (Exception ex)
             {
@@ -130,19 +130,22 @@ namespace LogBook_WPF
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = "qrz_auto_import_from_lotw.exe";
 
-                if (string.IsNullOrEmpty(configFile.Read("qrzCallsign", "Upload")))
+                if (string.IsNullOrEmpty(iniFile.Get("Upload", "qrzCallsign")))
                 {
                     MessageBox.Show("无法获取到呼号,是否在设置中配置了呼号?");
                     return;
-                };
+                }
+                ;
 
                 if (string.IsNullOrEmpty(originPwd))
                 {
                     MessageBox.Show("无法获取到密码,是否保存了密码?");
                     return;
-                };
+                }
+                ;
 
-                startInfo.Arguments = $"{configFile.Read("qrzCallsign", "QRZ")} {originPwd} --adif exportqrz.adi";
+                startInfo.Arguments =
+                    $"{iniFile.Get("Upload", "qrzCallsign")} {originPwd} --adif exportqrz.adi";
 
                 Process.Start(startInfo);
 
@@ -175,19 +178,23 @@ namespace LogBook_WPF
 
             foreach (QSO qso in qsoList)
             {
-
                 //// 添加QSO记录
                 sw.WriteLine("<CALL:" + qso.toCallsign.Length + ">" + qso.toCallsign);
                 sw.WriteLine("   <MODE:" + qso.mode.Length + ">" + qso.mode);
                 sw.WriteLine("   <QSO_DATE:8>" + qso.UTCTime.ToString("yyyyMMdd"));
                 sw.WriteLine("   <TIME_ON:6>" + qso.UTCTime.ToString("HHmmss"));
                 sw.WriteLine("   <FREQ:" + qso.freq.ToString().Length + ">" + qso.freq.ToString());
-                sw.WriteLine("   <BAND:" + qso.band.Length + ">" + qso.band);
+                sw.WriteLine("   <BAND:" + qso.band!.Length + ">" + qso.band);
 
                 if (!string.IsNullOrEmpty(qso.freq_rx.ToString()))
                 {
-                    sw.WriteLine("   <BAND_RX:" + qso.band_rx.Length + ">" + qso.band_rx);
-                    sw.WriteLine("   <FREQ_RX:" + qso.freq_rx.ToString().Length + ">" + qso.freq_rx.ToString());
+                    sw.WriteLine("   <BAND_RX:" + qso.band_rx!.Length + ">" + qso.band_rx);
+                    sw.WriteLine(
+                        "   <FREQ_RX:"
+                            + qso.freq_rx.ToString()!.Length
+                            + ">"
+                            + qso.freq_rx.ToString()
+                    );
                 }
 
                 if (!string.IsNullOrEmpty(qso.selfGrid))
@@ -202,12 +209,19 @@ namespace LogBook_WPF
 
                 if (!string.IsNullOrEmpty(qso.selfWatt.ToString()))
                 {
-                    sw.WriteLine("   <TX_PWR:" + qso.selfWatt.ToString().Length + ">" + qso.selfWatt.ToString());
+                    sw.WriteLine(
+                        "   <TX_PWR:"
+                            + qso.selfWatt.ToString()!.Length
+                            + ">"
+                            + qso.selfWatt.ToString()
+                    );
                 }
 
                 if (!string.IsNullOrEmpty(qso.toWatt.ToString()))
                 {
-                    sw.WriteLine("   <RX_PWR:" + qso.toWatt.ToString().Length + ">" + qso.toWatt.ToString());
+                    sw.WriteLine(
+                        "   <RX_PWR:" + qso.toWatt.ToString()!.Length + ">" + qso.toWatt.ToString()
+                    );
                 }
 
                 if (!string.IsNullOrEmpty(qso.prop_mode))
@@ -238,23 +252,34 @@ namespace LogBook_WPF
         private void exportToLoTW_Click(object sender, RoutedEventArgs e)
         {
             exportADIF("exportlotw.adi");
-            if (string.IsNullOrEmpty(configFile.Read("tqslAddr", "Upload")))
+            if (string.IsNullOrEmpty(iniFile.Get("Upload", "tqslAddr")))
             {
                 MessageBox.Show("无法获取TQSL文件地址,是否在设置中配置了TQSL可执行文件地址?");
                 return;
-            };
+            }
+            ;
 
-            if (string.IsNullOrEmpty(configFile.Read("tqslStationName", "Upload")))
+            if (string.IsNullOrEmpty(iniFile.Get("Upload", "tqslStationName")))
             {
-                MessageBox.Show("无法获取到台站名称,是否在设置中配置了台站名称?(台站名称应当填入TQSL应用中的台站地址)");
+                MessageBox.Show(
+                    "无法获取到台站名称,是否在设置中配置了台站名称?(台站名称应当填入TQSL应用中的台站地址)"
+                );
                 return;
-            };
+            }
+            ;
 
             //工作方式参考https://gitee.com/yuzhenwu/x-qsl-amateur-radio-adif-tool,感谢并致以诚挚的73!
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.FileName = "cmd.exe";
-            startInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(configFile.Read("tqslAddr", "Upload"));
-            startInfo.Arguments = "/C \"tqsl -q -l \"" + configFile.Read("tqslStationName", "Upload") + "\" -p \"Insecure\" -a all -u -d \""+ System.Environment.CurrentDirectory +"\\exportlotw.adi\"  2>temp.txt  ";
+            startInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(
+                iniFile.Get("Upload", "tqslAddr")
+            );
+            startInfo.Arguments =
+                "/C \"tqsl -q -l \""
+                + iniFile.Get("Upload", "tqslStationName")
+                + "\" -p \"Insecure\" -a all -u -d \""
+                + System.Environment.CurrentDirectory
+                + "\\exportlotw.adi\"  2>temp.txt  ";
             startInfo.RedirectStandardOutput = true;
             startInfo.UseShellExecute = false;
             startInfo.StandardOutputEncoding = Encoding.Default;
@@ -266,8 +291,6 @@ namespace LogBook_WPF
             process.WaitForExit();
 
             MessageBox.Show("导出任务执行完成,请打开LoTW网页核对是否正确导出");
-
-
         }
     }
 }

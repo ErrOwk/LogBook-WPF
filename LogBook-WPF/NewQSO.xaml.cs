@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ErrOwk.IniParser;
 using LogBook_WPF.Models;
 using Microsoft.Win32.SafeHandles;
 using SQLite;
@@ -31,7 +32,7 @@ namespace LogBook_WPF
 
         public SQLiteConnection conn;
 
-        public IniFile configFile = new IniFile("Data\\config.ini");
+        public IniParser iniFile = new IniParser("Data\\config.ini");
 
         public NewQSO()
         {
@@ -60,13 +61,13 @@ namespace LogBook_WPF
             conn.CreateTable<QSO>();
             //配置SQLite
 
-            selfCallsign.Text = configFile.Read("selfCallsign");
-            selfGrid.Text = configFile.Read("selfGrid");
-            selfWX.Text = configFile.Read("selfWX");
-            selfRIG.Text = configFile.Read("selfRIG");
-            selfANT.Text = configFile.Read("selfANT");
-            selfWatt.Text = configFile.Read("selfWatt");
-            selfQTH.Text = configFile.Read("selfQTH");
+            selfCallsign.Text = iniFile.Get("LogBook - WPF","selfCallsign");
+            selfGrid.Text = iniFile.Get("LogBook - WPF", "selfGrid");
+            selfWX.Text = iniFile.Get("LogBook - WPF", "selfWX");
+            selfRIG.Text = iniFile.Get("LogBook - WPF", "selfRIG");
+            selfANT.Text = iniFile.Get("LogBook - WPF", "selfANT");
+            selfWatt.Text = iniFile.Get("LogBook - WPF", "selfWatt");
+            selfQTH.Text = iniFile.Get("LogBook - WPF", "selfQTH");
             //从ini文件中读取保存的信息
         }
 
@@ -165,13 +166,13 @@ namespace LogBook_WPF
             conn.Insert(newQSO);
             //将数据转换并检验后存入数据库中
 
-            configFile.Write("selfCallsign", selfCallsign.Text);
-            configFile.Write("selfGrid", selfGrid.Text);
-            configFile.Write("selfWX", selfWX.Text);
-            configFile.Write("selfRIG", selfRIG.Text);
-            configFile.Write("selfANT", selfANT.Text);
-            configFile.Write("selfWatt", selfWatt.Text);
-            configFile.Write("selfQTH", selfQTH.Text);
+            iniFile.Update("LogBook - WPF", "selfCallsign", selfCallsign.Text);
+            iniFile.Update("LogBook - WPF", "selfGrid", selfGrid.Text);
+            iniFile.Update("LogBook - WPF", "selfWX", selfWX.Text);
+            iniFile.Update("LogBook - WPF", "selfRIG", selfRIG.Text);
+            iniFile.Update("LogBook - WPF", "selfANT", selfANT.Text);
+            iniFile.Update("LogBook - WPF", "selfWatt", selfWatt.Text);
+            iniFile.Update("LogBook - WPF", "selfQTH", selfQTH.Text);
             //向ini文件保存信息
 
             this.Close();
@@ -283,7 +284,7 @@ namespace LogBook_WPF
             };
 
             string txFreq;
-            if (SatelliteFrequencies.TryGetValue(sat, out txFreq))
+            if (SatelliteFrequencies.TryGetValue(sat, out txFreq!))
             {
                 return txFreq;
             }
@@ -322,7 +323,7 @@ namespace LogBook_WPF
             };
 
             string rxFreq;
-            if (SatelliteFrequencies.TryGetValue(sat, out rxFreq))
+            if (SatelliteFrequencies.TryGetValue(sat, out rxFreq!))
             {
                 return rxFreq;
             }
